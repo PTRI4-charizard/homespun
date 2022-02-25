@@ -50,12 +50,15 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 
   try {
     //todo: ADD 'SKILLS' TO DATABASE
-    const data = await client.query(
+    const { rows } = await client.query(
       'INSERT INTO users (firstName, lastName, email, passwordHash, createdOn, lastLogin) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
       [firstName, lastName, email, passwordHash, new Date(), new Date()],
     );
 
-    console.log(data);
+    return res.status(201).json({
+      status: 'success',
+      data: { user: rows[0] },
+    });
   } catch (err) {
     console.log(err);
   }
