@@ -1,13 +1,14 @@
-const express = require('express');
+import express from 'express';
 const next = require('next')
 const NextjsExpressRouter = require("./nextjs_express_router")
 const Middleware = require("./middleware")
+import connectDB from './elephantsql';
 
-const httpServer = (express) => {
+const httpServer = (express: any) => {
   return require('http').createServer(express)
 }
 
-const httpsServer = (express) => {
+const httpsServer = (express: any) => {
   const fs = require('fs')
   const options = {
     key: fs.readFileSync(process.env.SSL_PRIVATE_KEY_PATH, 'utf8'),
@@ -17,7 +18,12 @@ const httpsServer = (express) => {
 }
 
 class Server {
-  constructor(port) {
+  port: number;
+  express: any;
+  next: any;
+  middleware: any;
+  router: any;
+  constructor(port: number) {
     this.port = port
     this.express = express()
     this.next = next({ dev: process.env.NODE_ENV !== 'production' })
@@ -27,10 +33,14 @@ class Server {
 
   async start() {
     await this.next.prepare()
+    this.express.use(express.json());
     await this.middleware.init()
     await this.router.init()
-    this.server = httpServer(this.express)
-    this.server.listen(process.env.EXPRESS_PORT)
+    const server = httpServer(this.express)
+    connectDB().then(() => {
+      server.listen(process.env.EXPRESS_PORT)
+    });
+    
   }
 }
 

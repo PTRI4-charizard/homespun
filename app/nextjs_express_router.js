@@ -5,17 +5,17 @@ class NextjsExpressRouter {
   }
 
   async init() {
-    this.initApi()
-    this.initPages()
+    this.initSkillsRoutes()
+    this.initUserRoutes()
     this.initErrors()
   }
-
-  initApi() {
-    return (new (require("./routes/api.js"))(this.express)).init()
+  
+  initSkillsRoutes() {
+    return (new (require("./routes/skillsRoutes.ts"))(this.express)).init()
   }
 
-  initPages() {
-    return (new (require("./routes/pages.js"))(this.express, this.next)).init()
+  initUserRoutes() {
+    return (new (require("./routes/userRoutes.ts"))(this.express)).init()
   }
 
   initErrors() {
