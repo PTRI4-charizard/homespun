@@ -1,7 +1,10 @@
 {
-  "name": "charizard",
+  "name": "homespun",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "repository": "https://github.com/PTRI4-charizard/homespun/",
+  "author": "eric-mulhern, MatchaPug3, yochishor, J-Mad-08, cfgyer",
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
