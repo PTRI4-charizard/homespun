@@ -10,6 +10,15 @@ interface User {
   skills: string[];
 }
 
+const getSkillsObj = async () => {
+  const { rows: skills } = await client.query('SELECT * FROM skills');
+
+  return skills.reduce((output, skill) => {
+    output[skill.skill_id] = skill.name;
+    return output;
+  }, {});
+};
+
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { rows } = await client.query(
@@ -28,7 +37,6 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
 export const getUser = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
   try {
-    // TODO: GET USER'S 'SKILLS'
     const result = await client.query('SELECT * FROM users WHERE user_id = $1', [id]);
     const user = result.rows[0];
 
@@ -37,14 +45,9 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) =
       [id],
     );
 
-    const { rows: skills } = await client.query('SELECT * FROM skills');
+    const skillsObj = await getSkillsObj();
 
-    const skillsTable = skills.reduce((output, skill) => {
-      output[skill.skill_id] = skill.name;
-      return output;
-    }, {});
-
-    user.skills = skillIds.map(({ skill_id }) => skillsTable[skill_id]);
+    user.skills = skillIds.map(({ skill_id }) => skillsObj[skill_id]);
 
     console.log(user);
 
@@ -63,15 +66,31 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
   const passwordHash: string = await bcrypt.hash(password, 12);
 
   try {
-    //todo: ADD 'SKILLS' TO DATABASE
     const { rows } = await client.query(
       'INSERT INTO users (firstName, lastName, email, passwordHash, createdOn, lastLogin) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
       [firstName, lastName, email, passwordHash, new Date(), new Date()],
     );
+    const user = rows[0];
+
+    const result = await client.query('SELECT * FROM skills');
+    const skillsTable = result.rows.reduce((output, skill) => {
+      output[skill.name] = skill.skill_id;
+      return output;
+    }, {});
+
+    const skillsQueries = skills.map((skill) =>
+      client.query('INSERT INTO user_skills (skill_id, user_id) VALUES ($1, $2) RETURNING *', [
+        skillsTable[skill],
+        user.user_id,
+      ]),
+    );
+    const results = await Promise.all(skillsQueries);
+
+    user.skills = skills;
 
     return res.status(201).json({
       status: 'success',
-      data: { user: rows[0] },
+      data: { user },
     });
   } catch (err) {
     console.log(err);

@@ -18,7 +18,7 @@ export const createSkill = async (req: Request, res: Response, next: NextFunctio
   const { name } = req.body;
   try {
     const { rows } = await client.query('INSERT INTO skills (name) VALUES ($1) RETURNING *', [
-      name,
+      name.toLowerCase(),
     ]);
 
     return res.status(201).json({
