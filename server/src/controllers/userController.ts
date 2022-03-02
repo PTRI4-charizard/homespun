@@ -2,8 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
 import { client } from '../elephantsql';
 
-type Middleware = (req: Request, res: Response, next: NextFunction) => {};
-
 interface User {
   firstName: string;
   lastName: string;
@@ -20,7 +18,7 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
 
     return res.status(200).json({
       status: 'success',
-      data: { rows },
+      data: { users: rows },
     });
   } catch (err) {
     console.error(err);
@@ -31,9 +29,25 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) =
   const { id } = req.params;
   try {
     // TODO: GET USER'S 'SKILLS'
-    const data = await client.query('SELECT * FROM users WHERE id = $1', [id]);
+    const result = await client.query('SELECT * FROM users WHERE user_id = $1', [id]);
+    const user = result.rows[0];
 
-    console.log(data);
+    const { rows: skillIds } = await client.query(
+      'SELECT skill_id FROM user_skills WHERE user_id = $1',
+      [id],
+    );
+
+    const { rows: skills } = await client.query('SELECT * FROM skills');
+
+    const skillsTable = skills.reduce((output, skill) => {
+      output[skill.skill_id] = skill.name;
+      return output;
+    }, {});
+
+    user.skills = skillIds.map(({ skill_id }) => skillsTable[skill_id]);
+
+    console.log(skillIds);
+
     return res.status(200).json({
       status: 'success',
       data: 'HELLO',

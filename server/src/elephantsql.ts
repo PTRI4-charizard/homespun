@@ -1,7 +1,6 @@
 import pg from 'pg';
 
-var conString =
-  'postgres://fmwvoash:vsSGlYHz_P3ubXAFOkf0KeOJW_jmQR1j@jelani.db.elephantsql.com/fmwvoash';
+var conString = process.env.DATABASE;
 
 export var client = new pg.Client(conString);
 

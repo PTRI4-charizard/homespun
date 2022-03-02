@@ -1,7 +1,13 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
+import dotenv from 'dotenv';
 import connectDB from './elephantsql';
 import userRouter from './routes/userRoutes';
 import skillsRouter from './routes/skillsRoutes';
+import path from 'path/posix';
+dotenv.config({
+  path: '../.env',
+});
+
 const app: Application = express();
 
 app.use(express.json());
