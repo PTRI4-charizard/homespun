@@ -15,86 +15,91 @@ import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
+// can make an arr of products to render forEach
+import shoeImg from '../assets/nike_ispa_airmax720.png';
+
 const ExpandMore = styled((props: any) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
+	const { expand, ...other } = props;
+	return <IconButton {...other} />;
 })(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest,
-  }),
+	transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+	marginLeft: 'auto',
+	transition: theme.transitions.create('transform', {
+		duration: theme.transitions.duration.shortest,
+	}),
 }));
 
 export default function FeedItem() {
-  const [expanded, setExpanded] = React.useState(false);
+	const [expanded, setExpanded] = React.useState(false);
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
+	const handleExpandClick = () => {
+		setExpanded(!expanded);
+	};
 
-  return (
-    <Card sx={{ maxWidth: 345, minWidth: 266, m:2, p:2}}>
-      <CardHeader
-        avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            R
-          </Avatar>
-        }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
-        title={`${'Jireh Maddox'} – ${'Rad Shoe Designs'}`}
-        subheader="April 1, 1919"
-      />
-      <CardMedia
-        component="img"
-        height="194"
-        image="../../public/toes2.png"
-        alt={'(picture of shoes)'}
-      />
-      <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          {'This is the part where I describe how awesome my shoes are'}
-        </Typography>
-      </CardContent>
-      <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-        {/* <IconButton aria-label="share">
+	return (
+		<Card sx={{ maxWidth: 345, minWidth: 266, m: 2, p: 2 }}>
+			<CardHeader
+				avatar={
+					<Avatar sx={{ bgcolor: red[500] }} aria-label='recipe'>
+						R
+					</Avatar>
+				}
+				action={
+					<IconButton aria-label='settings'>
+						<MoreVertIcon />
+					</IconButton>
+				}
+				title={`${'Jireh Maddox'} – ${'Rad Shoe Designs'}`}
+				subheader='April 1, 1919'
+			/>
+			<CardMedia
+				component='img'
+				height='194'
+				image={shoeImg}
+				alt={'(picture of shoes)'}
+			/>
+			<CardContent>
+				<Typography variant='body2' color='text.secondary'>
+					{'This is the part where I describe how awesome my shoes are'}
+				</Typography>
+			</CardContent>
+			<CardActions disableSpacing>
+				<IconButton aria-label='add to favorites'>
+					<FavoriteIcon />
+				</IconButton>
+				{/* <IconButton aria-label="share">
           <ShareIcon />
         </IconButton> */}
-        <Typography align='right' sx={{width: '100%'}} variant='button'>
-          Details
-        </Typography>
-        <ExpandMore
-          expand={expanded}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
-          <ExpandMoreIcon />
-        </ExpandMore>
-      </CardActions>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          <Typography paragraph variant="body1" color="text.secondary">
-            Interested in trading for:
-          </Typography>
-          <Typography paragraph variant="body2" color="text.secondary">
-            {'massage, saxophone lessons, veggies'}
-          </Typography>
-          <Typography paragraph variant="body1" color="text.secondary">
-            How to Get in Contact:
-          </Typography>
-          <Typography paragraph variant="body2" color="text.secondary">
-            {'This is where I put my contact info so people can get in touch with me. '}
-          </Typography>
-        </CardContent>
-      </Collapse>
-    </Card>
-  );
+				<Typography align='right' sx={{ width: '100%' }} variant='button'>
+					Details
+				</Typography>
+				<ExpandMore
+					expand={expanded}
+					onClick={handleExpandClick}
+					aria-expanded={expanded}
+					aria-label='show more'
+				>
+					<ExpandMoreIcon />
+				</ExpandMore>
+			</CardActions>
+			<Collapse in={expanded} timeout='auto' unmountOnExit>
+				<CardContent>
+					<Typography paragraph variant='body1' color='text.secondary'>
+						Interested in trading for:
+					</Typography>
+					<Typography paragraph variant='body2' color='text.secondary'>
+						{'massage, saxophone lessons, veggies'}
+					</Typography>
+					<Typography paragraph variant='body1' color='text.secondary'>
+						How to Get in Contact:
+					</Typography>
+					<Typography paragraph variant='body2' color='text.secondary'>
+						{
+							'This is where I put my contact info so people can get in touch with me. '
+						}
+					</Typography>
+				</CardContent>
+			</Collapse>
+		</Card>
+	);
 }
