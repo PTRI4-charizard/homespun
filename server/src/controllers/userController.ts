@@ -46,11 +46,11 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) =
 
     user.skills = skillIds.map(({ skill_id }) => skillsTable[skill_id]);
 
-    console.log(skillIds);
+    console.log(user);
 
     return res.status(200).json({
       status: 'success',
-      data: 'HELLO',
+      data: { user },
     });
   } catch (err) {
     console.error(err);
