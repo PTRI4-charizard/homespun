@@ -18,6 +18,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
 
 // import axios from 'axios';
 import { useState } from 'react';
@@ -69,7 +70,13 @@ export default function PrimarySearchAppBar() {
 		React.useState<null | HTMLElement>(null);
 
 	//set the state for the input and save
-	const [skill, setSkill] = useState('');
+	interface SkillObj {
+		name: string;
+		skill_id: number;
+	}
+
+	// const [skill, setSkill] = useState('');
+	const [data, setData] = useState<Array<SkillObj>>([]);
 
 	const isMenuOpen = Boolean(anchorEl);
 	const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -113,12 +120,7 @@ export default function PrimarySearchAppBar() {
 		</Menu>
 	);
 
-	const inputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		//set the state for the input and save
-		// console.log(e.target.value);
-		setSkill(e.target.value);
-		// console.log(skill);
-
+	const inputChange = (event: React.SyntheticEvent<Element, Event>) => {
 		fetch('http://localhost:3000/skills', {
 			method: 'GET',
 			mode: 'cors',
@@ -128,7 +130,7 @@ export default function PrimarySearchAppBar() {
 		})
 			.then((res) => res.json())
 			// render the components
-			.then((data) => console.log(data.data.rows));
+			.then((d) => setData(d.data.rows));
 	};
 
 	const mobileMenuId = 'primary-search-account-menu-mobile';
@@ -182,6 +184,7 @@ export default function PrimarySearchAppBar() {
 			</MenuItem>
 		</Menu>
 	);
+	// console.log(data);
 
 	return (
 		<Box sx={{ flexGrow: 1 }}>
@@ -196,15 +199,17 @@ export default function PrimarySearchAppBar() {
 					>
 						homespun
 					</Typography>
-					<Search>
+					<Search onChange={inputChange}>
 						<SearchIconWrapper>
 							<SearchIcon />
 						</SearchIconWrapper>
 						{/* input */}
-						<StyledInputBase
-							placeholder='skills, goods, services…'
-							inputProps={{ 'aria-label': 'search' }}
-							onChange={inputChange}
+						<Autocomplete
+							disablePortal
+							id='combo-box-demo'
+							options={data.map((option) => option.name)}
+							sx={{ width: 300 }}
+							renderInput={(params) => <TextField {...params} label='Skills' />}
 						/>
 					</Search>
 					<Box sx={{ flexGrow: 1 }} />

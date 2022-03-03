@@ -15,8 +15,8 @@ import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-// can make an arr of products to render forEach
-import shoeImg from '../assets/nike_ispa_airmax720.png';
+// // can make an arr of products to render forEach
+// import shoeImg from '../assets/nike_ispa_airmax720.png';
 
 const ExpandMore = styled((props: any) => {
 	const { expand, ...other } = props;
@@ -29,7 +29,11 @@ const ExpandMore = styled((props: any) => {
 	}),
 }));
 
-export default function FeedItem() {
+interface FeedItemProps {
+	img: string;
+}
+
+export default function FeedItem(props: FeedItemProps) {
 	const [expanded, setExpanded] = React.useState(false);
 
 	const handleExpandClick = () => {
@@ -49,14 +53,14 @@ export default function FeedItem() {
 						<MoreVertIcon />
 					</IconButton>
 				}
-        // 
+				//
 				title={`${'Jireh Maddox'} – ${'Rad Shoe Designs'}`}
 				subheader='April 1, 1919'
 			/>
 			<CardMedia
 				component='img'
 				height='194'
-				image={shoeImg}
+				image={props.img}
 				alt={'(picture of shoes)'}
 			/>
 			<CardContent>
