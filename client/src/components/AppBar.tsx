@@ -17,8 +17,9 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import Autocomplete from '@mui/material/Autocomplete';
 
-import axios from 'axios';
+// import axios from 'axios';
 import { useState } from 'react';
 
 const Search = styled('div')(({ theme }) => ({
@@ -116,8 +117,18 @@ export default function PrimarySearchAppBar() {
 		//set the state for the input and save
 		// console.log(e.target.value);
 		setSkill(e.target.value);
-		//console.log(skill);
-		axios.get('http://localhost:3000/skills').then(console.log);
+		// console.log(skill);
+
+		fetch('http://localhost:3000/skills', {
+			method: 'GET',
+			mode: 'cors',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+			.then((res) => res.json())
+			// render the components
+			.then((data) => console.log(data.data.rows));
 	};
 
 	const mobileMenuId = 'primary-search-account-menu-mobile';
